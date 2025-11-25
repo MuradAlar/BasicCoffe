@@ -6,16 +6,21 @@ import java.util.List;
 
 public class PreparedBeverage {
     private final Beverage base;
+    private final Size size;
     private final List<AddOn> addOns = new ArrayList<>();
 
-    public PreparedBeverage(Beverage base) {
+    public PreparedBeverage(Beverage base, Size size) {
         this.base = base;
+        this.size = size;
     }
 
     public void addAddOn(AddOn addOn) {
         addOns.add(addOn);
     }
 
+    public Size getSize() {
+        return  size;
+    }
     public Beverage getBase() {
         return base;
     }
@@ -23,7 +28,7 @@ public class PreparedBeverage {
         return addOns;
     }
     public BigDecimal getPrice() {
-        var total = base.getPrice();
+        var total = base.getPrice().add(size.getExtra());
         for (var addOn : addOns) {
             total = total.add(addOn.getPrice());
         }

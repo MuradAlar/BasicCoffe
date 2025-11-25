@@ -2,14 +2,14 @@ package Domain;
 
 import java.math.BigDecimal;
 
-public class Tea extends Beverage{
+public class Cappuccino extends Beverage{
     @Override
     public String getName() {
-        return "Tea";
+        return "Cappuccino";
     }
 
     @Override
     public BigDecimal getPrice() {
-        return new BigDecimal("1.20");
+        return new BigDecimal("2.40");
     }
 }
