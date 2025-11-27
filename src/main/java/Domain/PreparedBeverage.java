@@ -15,6 +15,14 @@ public class PreparedBeverage {
     }
 
     public void addAddOn(AddOn addOn) {
+        if (this.base instanceof Tea || this.base instanceof IcedTea) {
+            String addOnName = addOn.getName().toLowerCase();
+            if (addOnName.contains("chocolate drops") || addOnName.contains("oat milk")
+            || addOnName.contains("cream")) {
+                System.out.println("You cannot chose this addOn on Tea/IcedTea");
+                return;
+            }
+        }
         addOns.add(addOn);
     }
 

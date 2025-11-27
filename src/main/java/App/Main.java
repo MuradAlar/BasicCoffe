@@ -1,15 +1,18 @@
 package App;
 import Domain.*;
+import Service.InventoryService;
 import Service.OrderService;
 import java.math.BigDecimal;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
-        var scanner = new Scanner(System.in);
-        var orderService = new OrderService();
-        var order = new Order();
+    static Scanner scanner = new Scanner(System.in);
+    static OrderService orderService = new OrderService();
+    static Order order = new Order();
+    static InventoryService inventoryService = new InventoryService();
 
+    private static final String PASSWORD = "StarSucks!";
+    public static void main(String[] args) {
 
         while (true) {
             System.out.println("|||||Coffee Shop|||||");
@@ -17,9 +20,10 @@ public class Main {
             System.out.println("2. View Chart");
             System.out.println("3. Checkout");
             System.out.println("4. Exit");
+            System.out.println("5. Login (Staff member only)");
             System.out.println("Choose: ");
 
-            int choice = readChoice(scanner, 4);
+            int choice = readChoice(scanner, 5);
 
             if (choice == 1) {
                 var PreparedBeverage = createBeverage(scanner);
@@ -36,6 +40,17 @@ public class Main {
             else if (choice == 4) {
                 System.out.println("See ya");
                 break;
+            }
+            else if (choice == 5) {
+                System.out.println("Enter password");
+                String password = scanner.nextLine();
+                if (password.equals(PASSWORD)) {
+                    System.out.println("ACCESS GRANTED");
+                    inventoryService.restockMenu(scanner);
+                }
+                else {
+                    System.out.println("Wrong password");
+                }
             }
         }
     }
@@ -93,7 +108,7 @@ public class Main {
             System.out.println("3. Syrup (+0.40) ");
             System.out.println("4. Cream (+0.50) ");
             System.out.println("5. Done");
-            System.out.println("Choose (max 3 times is allowed):");
+            System.out.println("Choose (3 attempts are allowed):");
             int addChoice = readChoice(scanner, 5);
 
             if (addChoice == 1) {
@@ -132,7 +147,15 @@ public class Main {
             System.out.println("Your chart is empty");
         }
         for (PreparedBeverage drink : order.getItems()) {
-            System.out.println(drink.getBase().getName() +  " = " + drink.getPrice());
+            BigDecimal price = drink.getPrice();
+            if (drink.getAddOns().size() >= 3) {
+                BigDecimal discountPrice = price.multiply(new BigDecimal("0.9"));
+                discountPrice = discountPrice.setScale(2, java.math.RoundingMode.HALF_UP);
+                System.out.println(drink.getBase().getName() + " " + discountPrice + " (Discounted)");
+            }
+            else {
+            System.out.println(drink.getBase().getName() +  " = " + price);
+            }
         }
     }
 }

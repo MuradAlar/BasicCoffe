@@ -22,8 +22,17 @@ public class OrderService {
     public void printReceipt(Order order, BigDecimal total) {
         System.out.println("----RECEIPT----");
         for (var beverage : order.getItems()) {
-            System.out.println(beverage.getBase().getName() + "-" + beverage.getPrice());
+            BigDecimal price = beverage.getPrice();
+            if (beverage.getAddOns().size() >= 3) {
+                BigDecimal discountPrice = price.multiply(new BigDecimal("0.9"));
+                discountPrice = discountPrice.setScale(2, java.math.RoundingMode.HALF_UP);
+                System.out.println(beverage.getBase().getName()  + " "+ discountPrice + "(Discount applied)");
+            }
+           else {
+                System.out.println(beverage.getBase().getName() + " = " + price);
+            }
         }
+        System.out.println("___________________");
         System.out.println("TOTAL IS " + total);
     }
 }
