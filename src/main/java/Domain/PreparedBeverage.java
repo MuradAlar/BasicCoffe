@@ -1,6 +1,7 @@
 package Domain;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,10 +37,10 @@ public class PreparedBeverage {
         return addOns;
     }
     public BigDecimal getPrice() {
-        var total = base.getPrice().add(size.getExtra());
+        var total = size.getPrice(base.getPrice());
         for (var addOn : addOns) {
             total = total.add(addOn.getPrice());
         }
-        return total;
+        return total.setScale(2, RoundingMode.HALF_UP);
     }
 }

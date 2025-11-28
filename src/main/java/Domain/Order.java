@@ -13,4 +13,8 @@ public class Order {
     public List<PreparedBeverage> getItems() {
         return items;
     }
+
+    public void clear() {
+        items.clear();
+    }
 }

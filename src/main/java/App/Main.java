@@ -26,9 +26,11 @@ public class Main {
             int choice = readChoice(scanner, 5);
 
             if (choice == 1) {
-                var PreparedBeverage = createBeverage(scanner);
-                order.addItem(PreparedBeverage);
-                System.out.println("Drink added");
+                var preparedBeverage = createBeverage(scanner);
+                if (preparedBeverage != null) {
+                    order.addItem(preparedBeverage);
+                    System.out.println("Drink added to chart!");
+                }
             }
             else if (choice == 2) {
                 printCart(order);
@@ -36,6 +38,7 @@ public class Main {
             else if (choice == 3) {
                 var total = orderService.calculateDiscount(order);
                 orderService.printReceipt(order, total);
+                order.clear();
             }
             else if (choice == 4) {
                 System.out.println("See ya");
@@ -74,17 +77,26 @@ public class Main {
             case 4 -> new Americano();
             case 5 -> new IcedTea();
             case 6 -> new Cappuccino();
-            default -> {
+            default -> { // validation exception
                 System.out.println("Invalid. Default Tea");
                 yield new Tea();
             }
         };
-        System.out.println("you chose " + base.getName());
+
+        if (!inventoryService.isStock(base.getName())) {
+            System.out.println("Sorry " + base.getName() + " is out of at the time");
+            return null;
+        }
+        else {
+            System.out.println("you chose " + base.getName());
+
+        }
+        inventoryService.decreaseStock(base.getName());
         System.out.println("------------------");
         System.out.println("Chose size: ");
         System.out.println("1. Small ");
-        System.out.println("2. Medium (+0.50)");
-        System.out.println("3. Large (+1.00)");
+        System.out.println("2. Medium (+30%)");
+        System.out.println("3. Large (+50%)");
 
         int sizeChoice = readChoice(scanner, 3);
 
@@ -94,14 +106,14 @@ public class Main {
         case 3 -> Size.LARGE;
             default -> {
                 System.out.println("Invalid size. Default SMALL.");
-                yield Size.SMALL;
+                yield  Size.SMALL;
             }
         };
 
         var prepared = new PreparedBeverage(base, size);
 
-        int i = 0;
-        while (i < 3) {
+        int maxAddon = 0;
+        while (maxAddon < 3) {
             System.out.println("++++ADDONS++++");
             System.out.println("1. Chocolate drops  (+1.00)");
             System.out.println("2. Oat Milk (+0.80)");
@@ -126,7 +138,7 @@ public class Main {
             else if (addChoice == 5) {
                 break;
             }
-            i++;
+            maxAddon++;
         }
         return prepared;
     }

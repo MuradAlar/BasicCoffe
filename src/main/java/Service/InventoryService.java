@@ -6,63 +6,138 @@ import java.util.Scanner;
 
 public class InventoryService {
     private final Map<String, Integer> stock = new HashMap<>();
-    public void inventory(Scanner scanner) {
+
+    public InventoryService() {
         stock.put("Espresso", 10);
-        stock.put("Latte", 10);
+        stock.put("Latte", 1);
         stock.put("Tea", 5);
         stock.put("Americano", 4);
         stock.put("Iced Tea", 10);
         stock.put("Cappuccino", 10);
     }
 
-    public void restockMenu(Scanner scanner) {
+    private int validInt(Scanner scanner) {
         while (true) {
-            System.out.println("1. View stock available");
-            System.out.println("2. Restock item");
-            System.out.println("3. Exit to main");
-            int input = scanner.nextInt();
-
-            switch (input) {
-                case 1 : displayStock();
-                break;
-                case 2 : restock(scanner);
-                break;
-                case 3 :
-                    System.out.println("Back to main");
-                    return;
-                default:
-                    System.out.println("Invalid option. Try Again");
+            System.out.print("Choose: ");
+            String line = scanner.nextLine();
+            try {
+                return Integer.parseInt(line);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a whole number.");
             }
-
         }
     }
-    public void restock(Scanner scanner) {
-        System.out.println("Restock menu. Enter item to restock: ");
-        String item = scanner.nextLine().toLowerCase();
-        System.out.println("Enter quantity of this item");
-        int quantity = scanner.nextInt();
-        try {
-            if (quantity <= 0) {
-                System.out.println("Enter valid number");
+
+    public void restockMenu(Scanner scanner) {
+        while (true) {
+            System.out.println("\n1. View stock available");
+            System.out.println("2. Restock item");
+            System.out.println("3. Exit to main");
+            int input = validInt(scanner);
+
+            switch (input) {
+                case 1 -> displayStock();
+                case 2 -> handleRestock(scanner);
+                case 3 -> {
+                    System.out.println("Back to main menu.");
+                    return;
+                }
+                default -> System.out.println("Invalid option. Try again.");
+            }
+        }
+    }
+
+    public void displayStock() {
+        System.out.println("\n--- Current Inventory Levels ---");
+        for (Map.Entry<String, Integer> entry : stock.entrySet()) {
+            System.out.printf("%-15s: %d units%n", entry.getKey(), entry.getValue());
+        }
+    }
+
+    public void decreaseStock(String item) {
+        int current = stock.getOrDefault(item, 0);
+        if (current <= 0) return;
+        stock.put(item, current - 1);
+    }
+
+    public boolean isStock(String item) {
+        return stock.getOrDefault(item, 0) > 0;
+    }
+
+    public void handleRestock(Scanner scanner) {
+        System.out.println("\nAvailable items: Espresso, Latte, Cappuccino, Americano, Tea, Iced Tea");
+
+        while (true) {
+            System.out.print("\nEnter item name to restock (or 'exit' to go back): ");
+            String input = scanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("exit")) {
                 return;
             }
-            updateStock(item, quantity);
-            System.out.println("Item added");
-        }
-        catch (NumberFormatException e) {
-            System.out.println("Invalid quantity");
+
+            if (input.isEmpty()) {
+                System.out.println("Please type something!");
+                continue;
+            }
+
+            String foundItem = null;
+            String userText = input.toLowerCase();
+
+            for (String item : stock.keySet()) {
+                if (item.equalsIgnoreCase(input)) {
+                    foundItem = item;
+                    break;
+                }
+            }
+
+            if (foundItem == null) {
+                for (String item : stock.keySet()) {
+                    if (item.toLowerCase().startsWith(userText)) {
+                        foundItem = item;
+                        break;
+                    }
+                }
+            }
+
+            if (foundItem == null) {
+                for (String item : stock.keySet()) {
+                    if (item.toLowerCase().contains(userText)) {
+                        foundItem = item;
+                        break;
+                    }
+                }
+            }
+
+
+            if (foundItem == null) {
+                System.out.println("Item '" + input + "' not found. Try typing part of the name (e.g., 'lat' for Latte)");
+                continue;
+            }
+
+            int quantity = 0;
+            while (quantity <= 0) {
+                System.out.print("How many " + foundItem + " to add? ");
+                String qtyInput = scanner.nextLine().trim();
+
+                if (qtyInput.equalsIgnoreCase("exit")) return;
+
+                try {
+                    quantity = Integer.parseInt(qtyInput);
+                    if (quantity <= 0) {
+                        System.out.println("Please enter a number greater than 0.");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("That's not a valid number. Try again.");
+                }
+            }
+
+            updateStock(foundItem, quantity);
+            System.out.println("✓ Added " + quantity + " " + foundItem + "(s). Current: " + stock.get(foundItem));
         }
     }
 
     public void updateStock(String item, int quantity) {
-        int currentStock = stock.getOrDefault(item, 0);
-        stock.put(item, quantity + currentStock);
-    }
-    public void displayStock() {
-        System.out.println("Welcome to inventory");
-        System.out.println("\n--- Current Inventory Levels ---");
-        for (Map.Entry<String, Integer> entry : stock.entrySet()) {
-            System.out.printf("   %-15s: %d units%n", entry.getKey(), entry.getValue());
-        }
+        int current = stock.getOrDefault(item, 0);
+        stock.put(item, current + quantity);
     }
 }
