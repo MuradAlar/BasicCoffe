@@ -1,19 +1,65 @@
 package Service;
 
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
 public class InventoryService {
     private final Map<String, Integer> stock = new HashMap<>();
+    private static final String CSV_PATH = "src/main/resources/menu.csv";
+    private static final Map<Integer, String> coffees = Map.of(
+            1,"Espresso",
+            2,"Latte",
+            3,"Tea",
+            4,"Americano",
+            5,"Iced tea",
+            6,"Cappuccino");
 
-    public InventoryService() {
-        stock.put("Espresso", 10);
-        stock.put("Latte", 1);
-        stock.put("Tea", 5);
-        stock.put("Americano", 4);
-        stock.put("Iced Tea", 10);
-        stock.put("Cappuccino", 10);
+    public InventoryService() { // Load from CSV
+        File file = new File(CSV_PATH);
+        if (!file.exists()) {
+            stock.put("Espresso", 10);
+            stock.put("Latte", 1);
+            stock.put("Tea", 5);
+            stock.put("Americano", 4);
+            stock.put("Iced Tea", 10);
+            stock.put("Cappuccino", 10);
+            saveStockToCsv();
+            return;
+        }
+        try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            reader.readLine();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(",");
+                if (parts.length != 2) continue;
+                String drink = parts[0].trim();
+                int quantity = Integer.parseInt(parts[1].trim());
+                stock.put(drink, quantity);
+            }
+        }
+        catch (IOException | NumberFormatException e) {
+            System.out.println("Loading error happened ");
+            stock.put("Espresso", 10);
+            stock.put("Latte", 1);
+            stock.put("Tea", 5);
+            stock.put("Americano", 4);
+            stock.put("Iced Tea", 10);
+            stock.put("Cappuccino", 10);
+            saveStockToCsv();
+        }
+    }
+    public void saveStockToCsv() {
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(CSV_PATH))) {
+            writer.write("Drink,Stock\n");
+            for(Map.Entry<String, Integer> entry : stock.entrySet()) {
+                writer.write(entry.getKey() + "," + entry.getValue() + "\n");
+            }
+        } catch (Exception e) {
+            System.out.println("Error saving to CSV");
+        }
     }
 
     private int validInt(Scanner scanner) {
@@ -58,6 +104,7 @@ public class InventoryService {
         int current = stock.getOrDefault(item, 0);
         if (current <= 0) return;
         stock.put(item, current - 1);
+        saveStockToCsv();
     }
 
     public boolean isStock(String item) {
@@ -65,7 +112,10 @@ public class InventoryService {
     }
 
     public void handleRestock(Scanner scanner) {
-        System.out.println("\nAvailable items: Espresso, Latte, Cappuccino, Americano, Tea, Iced Tea");
+        System.out.println("\nAvailable items: \n");
+        for (Map.Entry<Integer, String> entry : coffees.entrySet()) {
+            System.out.println(entry.getKey() + ". " + entry.getValue());
+        }
 
         while (true) {
             System.out.print("\nEnter item name to restock (or 'exit' to go back): ");
@@ -80,33 +130,23 @@ public class InventoryService {
                 continue;
             }
 
-            String foundItem = null;
-            String userText = input.toLowerCase();
+            int userChoice;
 
-            for (String item : stock.keySet()) {
-                if (item.equalsIgnoreCase(input)) {
-                    foundItem = item;
-                    break;
-                }
+            try {
+                userChoice = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number. Try again.");
+                continue;
             }
 
-            if (foundItem == null) {
-                for (String item : stock.keySet()) {
-                    if (item.toLowerCase().startsWith(userText)) {
-                        foundItem = item;
-                        break;
-                    }
-                }
+            if (userChoice < 1 || userChoice > 6) {
+                System.out.println("Please enter a valid number of coffee between 1 and 6");
+                continue;
             }
 
-            if (foundItem == null) {
-                for (String item : stock.keySet()) {
-                    if (item.toLowerCase().contains(userText)) {
-                        foundItem = item;
-                        break;
-                    }
-                }
-            }
+            String foundItem = coffees.get(userChoice);
+            System.out.println("You chose: " + foundItem);
+
 
 
             if (foundItem == null) {
@@ -133,6 +173,7 @@ public class InventoryService {
 
             updateStock(foundItem, quantity);
             System.out.println("✓ Added " + quantity + " " + foundItem + "(s). Current: " + stock.get(foundItem));
+            saveStockToCsv();
         }
     }
 

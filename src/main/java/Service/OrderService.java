@@ -1,24 +1,22 @@
 package Service;
-
 import Domain.Order;
-import Pricing.MaxAddonsDiscount;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class OrderService {
-    public BigDecimal calculateSubtotal(Order order) {
-        BigDecimal subtotal = BigDecimal.ZERO;
-
-        for(var beverage : order.getItems()) {
-            subtotal = subtotal.add(beverage.getPrice());
+    public BigDecimal calculateDiscount(Order order) {
+        BigDecimal total = BigDecimal.ZERO;
+        for (var drink : order.getItems()) {
+            BigDecimal price = drink.getPrice();
+            if (drink.getAddOns().size() >= 3) {
+                price = price.multiply(new BigDecimal("0.9")).setScale(2, RoundingMode.HALF_UP);
+            }
+            total = total.add(price);
         }
-        return subtotal;
+        return total.setScale(2, RoundingMode.HALF_UP);
     }
-    public BigDecimal calculateDiscount(Order order){
-        var strategy = new MaxAddonsDiscount();
-        BigDecimal subtotal = calculateSubtotal(order);
-        return strategy.apply(order, subtotal);
-    }
+
     public void printReceipt(Order order, BigDecimal total) {
         System.out.println("----RECEIPT----");
         for (var beverage : order.getItems()) {

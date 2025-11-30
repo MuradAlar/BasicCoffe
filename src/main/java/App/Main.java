@@ -154,7 +154,7 @@ public class Main {
     }
 
     private static void printCart(Order order) {
-        System.out.println("///// Chart");
+        System.out.println("///// Cart");
         if (order.getItems().isEmpty()) {
             System.out.println("Your chart is empty");
         }
