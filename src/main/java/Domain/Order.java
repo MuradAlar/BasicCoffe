@@ -1,5 +1,6 @@
 package Domain;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,15 @@ public class Order {
     public List<PreparedBeverage> getItems() {
         return items;
     }
+    public BigDecimal calculateSubtotal() {
+        BigDecimal subtotal = BigDecimal.ZERO;
 
+        for (var drink : items) {
+            subtotal = subtotal.add(drink.getPrice());
+        }
+
+        return subtotal;
+    }
     public void clear() {
         items.clear();
     }

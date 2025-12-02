@@ -4,17 +4,20 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 public class InventoryService {
     private final Map<String, Integer> stock = new HashMap<>();
     private static final String CSV_PATH = "src/main/resources/menu.csv";
-    private static final Map<Integer, String> coffees = Map.of(
-            1,"Espresso",
-            2,"Latte",
-            3,"Tea",
-            4,"Americano",
-            5,"Iced tea",
-            6,"Cappuccino");
+    private static final Map<Integer, String> coffees = new TreeMap<>(
+            Map.of(
+                    1,"Espresso",
+                    2,"Latte",
+                    3,"Tea",
+                    4,"Americano",
+                    5,"IcedTea",
+                    6,"Cappuccino")
+    );
 
     public InventoryService() { // Load from CSV
         File file = new File(CSV_PATH);
@@ -23,7 +26,7 @@ public class InventoryService {
             stock.put("Latte", 1);
             stock.put("Tea", 5);
             stock.put("Americano", 4);
-            stock.put("Iced Tea", 10);
+            stock.put("IcedTea", 10);
             stock.put("Cappuccino", 10);
             saveStockToCsv();
             return;
@@ -46,7 +49,7 @@ public class InventoryService {
             stock.put("Latte", 1);
             stock.put("Tea", 5);
             stock.put("Americano", 4);
-            stock.put("Iced Tea", 10);
+            stock.put("IcedTea", 10);
             stock.put("Cappuccino", 10);
             saveStockToCsv();
         }

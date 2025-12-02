@@ -1,13 +1,15 @@
 package App;
 import Domain.*;
+import Pricing.MaxAddonsDiscount;
 import Service.InventoryService;
 import Service.OrderService;
 import java.math.BigDecimal;
 import java.util.Scanner;
 
 public class Main {
+
     static Scanner scanner = new Scanner(System.in);
-    static OrderService orderService = new OrderService();
+    static OrderService orderService = new OrderService(new MaxAddonsDiscount());
     static Order order = new Order();
     static InventoryService inventoryService = new InventoryService();
 
@@ -36,7 +38,7 @@ public class Main {
                 printCart(order);
             }
             else if (choice == 3) {
-                var total = orderService.calculateDiscount(order);
+                var total = orderService.calculateTotal(order);
                 orderService.printReceipt(order, total);
                 order.clear();
             }
@@ -69,6 +71,9 @@ public class Main {
         System.out.println("Choose: ");
 
         int drinkChoice = readChoice(scanner, 6);
+        if (drinkChoice < 1 || drinkChoice > 6) {
+            System.out.println("Invalid. Default Tea");
+        }
 
         Beverage base = switch (drinkChoice) {
             case 1 -> new Espresso();
@@ -77,14 +82,13 @@ public class Main {
             case 4 -> new Americano();
             case 5 -> new IcedTea();
             case 6 -> new Cappuccino();
-            default -> { // validation exception
-                System.out.println("Invalid. Default Tea");
-                yield new Tea();
-            }
+            default ->  // validation exception
+                     new Tea();
+
         };
 
         if (!inventoryService.isStock(base.getName())) {
-            System.out.println("Sorry " + base.getName() + " is out of at the time");
+            System.out.println("Sorry " + base.getName() + " is out of stock at the time");
             return null;
         }
         else {
@@ -100,14 +104,15 @@ public class Main {
 
         int sizeChoice = readChoice(scanner, 3);
 
+        if (sizeChoice < 1 || sizeChoice > 3) {
+            System.out.println("Invalid size. Default SMALL.");
+        }
         Size size = switch (sizeChoice) {
         case 1 -> Size.SMALL;
         case 2 -> Size.MEDIUM;
         case 3 -> Size.LARGE;
-            default -> {
-                System.out.println("Invalid size. Default SMALL.");
-                yield  Size.SMALL;
-            }
+            default -> Size.SMALL;
+
         };
 
         var prepared = new PreparedBeverage(base, size);
