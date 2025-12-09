@@ -1,9 +1,12 @@
 package Domain;
 
+import lombok.Getter;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class Order {
     private final List<PreparedBeverage> items = new ArrayList<>();
 
@@ -11,9 +14,6 @@ public class Order {
         items.add(preparedBeverage); //ready drink from main. choice == 1
     }
 
-    public List<PreparedBeverage> getItems() {
-        return items;
-    }
     public BigDecimal calculateSubtotal() {
         BigDecimal subtotal = BigDecimal.ZERO;
 

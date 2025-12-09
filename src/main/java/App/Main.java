@@ -82,8 +82,7 @@ public class Main {
             case 4 -> new Americano();
             case 5 -> new IcedTea();
             case 6 -> new Cappuccino();
-            default ->  // validation exception
-                     new Tea();
+            default -> new Tea();
 
         };
 
@@ -108,9 +107,8 @@ public class Main {
             System.out.println("Invalid size. Default SMALL.");
         }
         Size size = switch (sizeChoice) {
-        case 1 -> Size.SMALL;
-        case 2 -> Size.MEDIUM;
-        case 3 -> Size.LARGE;
+            case 2 -> Size.MEDIUM;
+            case 3 -> Size.LARGE;
             default -> Size.SMALL;
 
         };
@@ -129,16 +127,16 @@ public class Main {
             int addChoice = readChoice(scanner, 5);
 
             if (addChoice == 1) {
-                prepared.addAddOn(new AddOn("Chocolate drops", new BigDecimal("1.00")));
+                prepared.addAddOn(AddOn.CHOCOLATE_DROPS);
             }
             else if (addChoice == 2) {
-                prepared.addAddOn(new AddOn("Oat Milk", new BigDecimal("0.80")));
+                prepared.addAddOn(AddOn.OAT_MILK);
             }
             else if (addChoice == 3) {
-                prepared.addAddOn(new AddOn("Syrup", new BigDecimal("0.40")));
+                prepared.addAddOn(AddOn.SYRUP);
             }
             else if (addChoice == 4) {
-                prepared.addAddOn(new AddOn("Cream", new BigDecimal("0.50")));
+                prepared.addAddOn(AddOn.CREAM);
             }
             else if (addChoice == 5) {
                 break;
