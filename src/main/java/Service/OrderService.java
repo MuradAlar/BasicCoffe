@@ -16,7 +16,7 @@ public class OrderService {
     }
 
     public BigDecimal calculateTotal(Order order) {
-        BigDecimal subtotal = order.calculateSubtotal();
+        BigDecimal subtotal = BigDecimal.ZERO;
         return pricingStrategy.apply(order, subtotal);
     }
 

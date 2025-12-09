@@ -62,12 +62,12 @@ public class Main {
 
     private static PreparedBeverage createBeverage(Scanner scanner) {
         System.out.println("\n Choose a drink: ");
-        System.out.println("1. Espresso (2.00)");
-        System.out.println("2. Latte (2.50)");
-        System.out.println("3. Tea (1.20)");
-        System.out.println("4. Americano (2.50)");
-        System.out.println("5. Iced Tea (1.80)");
-        System.out.println("6. Cappuccino (2.40)");
+        System.out.println("1. Espresso " );
+        System.out.println("2. Latte ");
+        System.out.println("3. Tea ");
+        System.out.println("4. Americano ");
+        System.out.println("5. Iced Tea ");
+        System.out.println("6. Cappuccino ");
         System.out.println("Choose: ");
 
         int drinkChoice = readChoice(scanner, 6);
@@ -126,19 +126,15 @@ public class Main {
             System.out.println("Choose (3 attempts are allowed):");
             int addChoice = readChoice(scanner, 5);
 
-            if (addChoice == 1) {
-                prepared.addAddOn(AddOn.CHOCOLATE_DROPS);
+            switch (addChoice) {
+                case 1 -> prepared.addAddOn(AddOn.CHOCOLATE_DROPS);
+                case 2 -> prepared.addAddOn(AddOn.OAT_MILK);
+                case 3 -> prepared.addAddOn(AddOn.SYRUP);
+                case 4 -> prepared.addAddOn(AddOn.CREAM);
+                case 5 -> System.out.println("Addons are done");
+                default -> System.out.println("invalid");
             }
-            else if (addChoice == 2) {
-                prepared.addAddOn(AddOn.OAT_MILK);
-            }
-            else if (addChoice == 3) {
-                prepared.addAddOn(AddOn.SYRUP);
-            }
-            else if (addChoice == 4) {
-                prepared.addAddOn(AddOn.CREAM);
-            }
-            else if (addChoice == 5) {
+            if (addChoice == 5) {
                 break;
             }
             maxAddon++;

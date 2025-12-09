@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
-//switchcase, subtotal, preparedbeverage, addon, exxception....
+// preparedbeverage, exxception....
 
 public class InventoryService {
     private final Map<String, Integer> stock = new HashMap<>();

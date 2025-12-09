@@ -1,8 +1,5 @@
 package Domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 import java.math.BigDecimal;
 
 
