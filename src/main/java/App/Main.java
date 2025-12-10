@@ -61,13 +61,12 @@ public class Main {
     }
 
     private static PreparedBeverage createBeverage(Scanner scanner) {
-        System.out.println("\n Choose a drink: ");
-        System.out.println("1. Espresso " );
-        System.out.println("2. Latte ");
-        System.out.println("3. Tea ");
-        System.out.println("4. Americano ");
-        System.out.println("5. Iced Tea ");
-        System.out.println("6. Cappuccino ");
+        System.out.println("1. Espresso (" + new Espresso().getPrice() + ")");
+        System.out.println("2. Latte (" + new Latte().getPrice() + ")");
+        System.out.println("3. Tea (" + new Tea().getPrice() + ")");
+        System.out.println("4. Americano (" + new Americano().getPrice() + ")");
+        System.out.println("5. Iced Tea (" + new IcedTea().getPrice() + ")");
+        System.out.println("6. Cappuccino (" + new Cappuccino().getPrice() + ")");
         System.out.println("Choose: ");
 
         int drinkChoice = readChoice(scanner, 6);

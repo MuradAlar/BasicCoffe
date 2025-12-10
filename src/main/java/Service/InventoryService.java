@@ -44,7 +44,7 @@ public class InventoryService {
                 stock.put(drink, quantity);
             }
         }
-        catch (IOException | NumberFormatException e) {
+        catch ( IOException | NumberFormatException e) {
             System.out.println("Loading error happened ");
             stock.put("Espresso", 10);
             stock.put("Latte", 1);

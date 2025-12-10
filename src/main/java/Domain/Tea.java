@@ -12,4 +12,8 @@ public class Tea extends Beverage{
     public BigDecimal getPrice() {
         return new BigDecimal("1.20");
     }
+@Override
+    public boolean isAddOnAllowed(AddOn addOn) {
+        return addOn == AddOn.SYRUP;
+    }
 }

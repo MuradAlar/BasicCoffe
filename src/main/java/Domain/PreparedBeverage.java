@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+
+
 @RequiredArgsConstructor
 @Getter
 public class PreparedBeverage {
@@ -16,14 +18,9 @@ public class PreparedBeverage {
     private final List<AddOn> addOns = new ArrayList<>();
 
     public void addAddOn(AddOn addOn) {
-        if (this.base instanceof Tea || this.base instanceof IcedTea) {
-            String addOnName = addOn.getName().toLowerCase();
-            if (addOnName.contains("chocolate drops")
-                    || addOnName.contains("oat milk")
-                    || addOnName.contains("cream")) {
-                System.out.println("You cannot chose this addOn on Tea/IcedTea");
-                return;
-            }
+        if (!base.isAddOnAllowed(addOn)) {
+            System.out.println("This addOn is not compatible for this drink");
+            return;
         }
         addOns.add(addOn);
     }
