@@ -3,7 +3,6 @@ import Domain.*;
 import Pricing.MaxAddonsDiscount;
 import Service.InventoryService;
 import Service.OrderService;
-import java.math.BigDecimal;
 import java.util.Scanner;
 
 public class Main {
@@ -13,7 +12,9 @@ public class Main {
     static Order order = new Order();
     static InventoryService inventoryService = new InventoryService();
 
+
     private static final String PASSWORD = "StarSucks!";
+
     public static void main(String[] args) {
 
         while (true) {
@@ -156,17 +157,7 @@ public class Main {
         if (order.getItems().isEmpty()) {
             System.out.println("Your chart is empty");
         }
-        for (PreparedBeverage drink : order.getItems()) {
-            BigDecimal price = drink.getPrice();
-            if (drink.getAddOns().size() >= 3) {
-                BigDecimal discountPrice = price.multiply(new BigDecimal("0.9"));
-                discountPrice = discountPrice.setScale(2, java.math.RoundingMode.HALF_UP);
-                System.out.println(drink.getBase().getName() + " " + discountPrice + " (Discounted)");
-            }
-            else {
-            System.out.println(drink.getBase().getName() +  " = " + price);
-            }
-        }
+       ServiceHelper.printReceipt(order);
     }
 }
 

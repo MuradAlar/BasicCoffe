@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
-// preparedbeverage, exxception....
+// prepared beverage
 
 public class InventoryService {
     private final Map<String, Integer> stock = new HashMap<>();
@@ -44,7 +44,7 @@ public class InventoryService {
                 stock.put(drink, quantity);
             }
         }
-        catch ( IOException | NumberFormatException e) {
+        catch ( IOException e ) {
             System.out.println("Loading error happened ");
             stock.put("Espresso", 10);
             stock.put("Latte", 1);

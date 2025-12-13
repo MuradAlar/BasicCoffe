@@ -1,10 +1,10 @@
 package Service;
 
 import Domain.Order;
+import Domain.ServiceHelper;
 import Pricing.PricingStrategy;
-
 import java.math.BigDecimal;
-import java.math.RoundingMode;
+
 
 public class OrderService {
 
@@ -22,17 +22,7 @@ public class OrderService {
 
     public void printReceipt(Order order, BigDecimal total) {
         System.out.println("----RECEIPT----");
-        for (var item : order.getItems()) {
-            BigDecimal ogPrice = item.getPrice();
-            if (item.getAddOns().size() >= 3) {
-                BigDecimal discount = ogPrice.multiply(new BigDecimal("0.90"))
-                        .setScale(2, RoundingMode.HALF_UP);
-                System.out.println(item.getBase().getName() + " - " + discount + " Discounted");
-            }
-            else {
-                System.out.println(item.getBase().getName() + " - " + ogPrice);
-            }
-        }
+        ServiceHelper.printReceipt(order);
         System.out.println("___________________");
         System.out.println("TOTAL IS " + total);
     }
