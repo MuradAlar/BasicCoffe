@@ -1,7 +1,6 @@
 package Service;
 
 import Domain.Order;
-import Domain.ServiceHelper;
 import Pricing.PricingStrategy;
 import java.math.BigDecimal;
 
@@ -27,3 +26,4 @@ public class OrderService {
         System.out.println("TOTAL IS " + total);
     }
 }
+

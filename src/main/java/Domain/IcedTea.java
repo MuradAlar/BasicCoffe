@@ -9,7 +9,7 @@ public class IcedTea extends Beverage{
     }
 
     @Override
-    public BigDecimal getPrice() {
+    public BigDecimal getBasePrice() {
         return new BigDecimal("1.80");
     }
 @Override

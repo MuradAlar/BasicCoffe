@@ -3,6 +3,9 @@ import Domain.*;
 import Pricing.MaxAddonsDiscount;
 import Service.InventoryService;
 import Service.OrderService;
+import Service.ServiceHelper;
+
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -11,7 +14,6 @@ public class Main {
     static OrderService orderService = new OrderService(new MaxAddonsDiscount());
     static Order order = new Order();
     static InventoryService inventoryService = new InventoryService();
-
 
     private static final String PASSWORD = "StarSucks!";
 
@@ -61,30 +63,32 @@ public class Main {
         }
     }
 
-    private static PreparedBeverage createBeverage(Scanner scanner) {
-        System.out.println("1. Espresso (" + new Espresso().getPrice() + ")");
-        System.out.println("2. Latte (" + new Latte().getPrice() + ")");
-        System.out.println("3. Tea (" + new Tea().getPrice() + ")");
-        System.out.println("4. Americano (" + new Americano().getPrice() + ")");
-        System.out.println("5. Iced Tea (" + new IcedTea().getPrice() + ")");
-        System.out.println("6. Cappuccino (" + new Cappuccino().getPrice() + ")");
+    private static Beverage createBeverage(Scanner scanner) {
+        List<Beverage> beverages = List.of(
+                new Espresso(),
+                new Latte(),
+                new Tea(),
+                new Americano(),
+                new IcedTea(),
+                new Cappuccino()
+        );
+        //  MENU PRINTS
+        System.out.println("Choose your beverage:");
+        for (int i = 0; i < beverages.size(); i++) {
+            Beverage bev = beverages.get(i);
+            System.out.println((i + 1) + ". " + bev.getName() + " (" + bev.getBasePrice() + ")");
+        }
         System.out.println("Choose: ");
 
-        int drinkChoice = readChoice(scanner, 6);
-        if (drinkChoice < 1 || drinkChoice > 6) {
-            System.out.println("Invalid. Default Tea");
+        int drinkChoice = readChoice(scanner, beverages.size());
+
+        if (drinkChoice < 1 || drinkChoice > beverages.size()) {
+            System.out.println("Invalid. Defaulting to Tea");
+            drinkChoice = 3; // Tea default
         }
+        // index starts at 0
+        Beverage base = beverages.get(drinkChoice - 1);
 
-        Beverage base = switch (drinkChoice) {
-            case 1 -> new Espresso();
-            case 2 -> new Latte();
-            case 3 -> new Tea();
-            case 4 -> new Americano();
-            case 5 -> new IcedTea();
-            case 6 -> new Cappuccino();
-            default -> new Tea();
-
-        };
 
         if (!inventoryService.isStock(base.getName())) {
             System.out.println("Sorry " + base.getName() + " is out of stock at the time");
@@ -110,10 +114,8 @@ public class Main {
             case 2 -> Size.MEDIUM;
             case 3 -> Size.LARGE;
             default -> Size.SMALL;
-
         };
-
-        var prepared = new PreparedBeverage(base, size);
+        base.setSize(size);
 
         int maxAddon = 0;
         while (maxAddon < 3) {
@@ -127,10 +129,10 @@ public class Main {
             int addChoice = readChoice(scanner, 5);
 
             switch (addChoice) {
-                case 1 -> prepared.addAddOn(AddOn.CHOCOLATE_DROPS);
-                case 2 -> prepared.addAddOn(AddOn.OAT_MILK);
-                case 3 -> prepared.addAddOn(AddOn.SYRUP);
-                case 4 -> prepared.addAddOn(AddOn.CREAM);
+                case 1 -> base.addAddOn(AddOn.CHOCOLATE_DROPS);
+                case 2 -> base.addAddOn(AddOn.OAT_MILK);
+                case 3 -> base.addAddOn(AddOn.SYRUP);
+                case 4 -> base.addAddOn(AddOn.CREAM);
                 case 5 -> System.out.println("Addons are done");
                 default -> System.out.println("invalid");
             }
@@ -139,8 +141,17 @@ public class Main {
             }
             maxAddon++;
         }
-        return prepared;
+        return base;
     }
+
+    private static void printCart(Order order) {
+        System.out.println("///// Cart");
+        if (order.getItems().isEmpty()) {
+            System.out.println("Your chart is empty");
+        }
+       ServiceHelper.printReceipt(order);
+    }
+
     // helper
     private static int readChoice(Scanner scanner, int max) {
         while (true) {
@@ -150,14 +161,6 @@ public class Main {
             } catch (Exception ignore) {}
             System.out.println("Invalid input. Try again:");
         }
-    }
-
-    private static void printCart(Order order) {
-        System.out.println("///// Cart");
-        if (order.getItems().isEmpty()) {
-            System.out.println("Your chart is empty");
-        }
-       ServiceHelper.printReceipt(order);
     }
 }
 

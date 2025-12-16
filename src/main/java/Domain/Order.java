@@ -7,10 +7,10 @@ import java.util.List;
 
 @Getter
 public class Order {
-    private final List<PreparedBeverage> items = new ArrayList<>();
+    private final List<Beverage> items = new ArrayList<>();
 
-    public void addItem(PreparedBeverage preparedBeverage) {
-        items.add(preparedBeverage); //ready drink from main. choice == 1
+    public void addItem(Beverage item) {
+        items.add(item); //ready drink from main. choice == 1
     }
 
     public void clear() {
