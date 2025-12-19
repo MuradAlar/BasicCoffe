@@ -1,4 +1,4 @@
-package Domain;
+package domain;
 
 import java.math.BigDecimal;
 
@@ -8,6 +8,7 @@ public enum AddOn {
     OAT_MILK("Oat milk", new BigDecimal("0.80")),
     SYRUP("Syrup", new BigDecimal("0.40")),
     CREAM("Cream", new BigDecimal("0.50"));
+
     private final String name;
     private final BigDecimal price;
 

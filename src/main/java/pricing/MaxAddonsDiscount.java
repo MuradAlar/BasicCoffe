@@ -1,9 +1,10 @@
-package Pricing;
+package pricing;
 
-import Domain.Order;
+import domain.Order;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+
 
 public class MaxAddonsDiscount implements PricingStrategy{
 

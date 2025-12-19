@@ -1,7 +1,7 @@
-package Service;
+package service;
 
-import Domain.Order;
-import Pricing.PricingStrategy;
+import domain.Order;
+import pricing.PricingStrategy;
 import java.math.BigDecimal;
 
 

@@ -1,6 +1,6 @@
-package Pricing;
+package pricing;
 
-import Domain.Order;
+import domain.Order;
 
 import java.math.BigDecimal;
 

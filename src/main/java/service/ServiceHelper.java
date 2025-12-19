@@ -1,7 +1,7 @@
-package Service;
+package service;
 
-import Domain.Beverage;
-import Domain.Order;
+import domain.Beverage;
+import domain.Order;
 
 import java.math.BigDecimal;
 

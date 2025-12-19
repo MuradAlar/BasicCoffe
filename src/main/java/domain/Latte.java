@@ -1,15 +1,15 @@
-package Domain;
+package domain;
 
 import java.math.BigDecimal;
 
-public class Espresso extends Beverage{
+public class Latte extends Beverage{
     @Override
     public String getName() {
-        return "Espresso";
+        return "Latte";
     }
 
     @Override
     public BigDecimal getBasePrice() {
-        return new BigDecimal("2.00");
+        return new BigDecimal("2.50");
     }
 }
